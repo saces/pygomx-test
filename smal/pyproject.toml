@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smal"
+version = "0.0.1"
+requires-python = ">=3.11"
+description = "smal - simple matrix application library"
+authors = [{ name = "saces" }]
+license = "AGPL-3.0-only"
+readme = "README"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+]
+
+[tool.setuptools.package-dir]
+"pygomx" = "src/pygomx"
+"smal" = "src/smal"
+"smbl" = "src/smbl"
+
+[project.urls]
+repository = "https://code.c-base.org/saces/pygomx"
+
+[tool.distutils.egg_info]
+egg_base = "/tmp"
+
+[project.scripts]
+discoverhs = "pygomx.mxutils:discoverhs"

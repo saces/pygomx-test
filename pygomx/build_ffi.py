@@ -13,6 +13,7 @@ ffibuilder.set_source(
 
 ffibuilder.cdef(
     csource="""
+    extern char* discoverhs(char* p0);
     extern char* hello(char* p0);
     """
 )

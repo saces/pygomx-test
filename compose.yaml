@@ -1,0 +1,8 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Containerfile.debian
+    working_dir: /smal
+    volumes:
+      - ./smal:/smal:ro
