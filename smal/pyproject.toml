@@ -27,4 +27,9 @@ repository = "https://code.c-base.org/saces/pygomx"
 egg_base = "/tmp"
 
 [project.scripts]
-discoverhs = "pygomx.mxutils:discoverhs"
+mxdiscover = "pygomx.mxutils:discoverhs"
+mxwhoami = "pygomx.mxutils:whoami"
+mxtoken = "pygomx.mxutils:mktoken"
+mxaccountinfo = "pygomx.mxutils:accountinfo"
+mxclearaccount = "pygomx.mxutils:clearaccount"
+mxserverinfo = "pygomx.mxutils:serverinfo"

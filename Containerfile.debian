@@ -28,7 +28,7 @@ COPY pygomx /pygomx
 RUN <<EOF
 cd /pygomx
 python3 build_ffi.py
-ls -lha
+ls -la *.so
 EOF
 
 FROM docker.io/library/python:${PYTHON_VERSION}-${DEBIAN_VERSION}
@@ -38,4 +38,3 @@ RUN pip install cffi
 COPY --from=gobuilder /pygomx-build/libmxclient.so /usr/local/lib/
 COPY --from=pybuilder /pygomx/_pygomx.cpython-314-x86_64-linux-gnu.so /usr/local/lib/python3.14/site-packages/
 RUN ldconfig
-

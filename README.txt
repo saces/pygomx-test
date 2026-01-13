@@ -11,11 +11,11 @@ docker compose run --rm dev /bin/bash
 
 
 pip install -e .
-discoverhs <mxid>
+mxdiscover <mxid>
 
 
 ---
-screenshot:
+(old) screenshot:
 ~/p/m/pygomx (main|✚4) $ docker compose run --rm dev /bin/bash
 Container pygomx-dev-run-401f3ed5da9c Creating 
 Container pygomx-dev-run-401f3ed5da9c Created 

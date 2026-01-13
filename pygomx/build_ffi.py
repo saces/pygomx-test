@@ -13,8 +13,13 @@ ffibuilder.set_source(
 
 ffibuilder.cdef(
     csource="""
-    extern char* discoverhs(char* p0);
-    extern char* hello(char* p0);
+    extern char* cli_discoverhs(char* mxid);
+    extern char* cli_mkmxtoken(char* mxid, char* pw);
+    extern char* cli_whoami(char* hs, char* accessToken);
+    extern char* cli_accountinfo(char* hs, char* accessToken);
+    extern char* cli_clearaccount(char* hs, char* accessToken);
+    extern char* cli_serverinfo(char* url);
+    extern int createclient(char* url, char* userID, char* accessToken);
     """
 )
 
