@@ -13,6 +13,7 @@ ffibuilder.set_source(
 
 ffibuilder.cdef(
     csource="""
+    extern void  FreeCString(char * s);
     extern char* cli_discoverhs(char* mxid);
     extern char* cli_mkmxtoken(char* mxid, char* pw);
     extern char* cli_whoami(char* hs, char* accessToken);

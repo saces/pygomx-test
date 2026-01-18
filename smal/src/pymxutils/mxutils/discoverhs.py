@@ -13,4 +13,5 @@ def discoverhs():
 
     r = lib.cli_discoverhs(mxid)
     result = ffi.string(r)
+    lib.FreeCString(r)
     print(result)

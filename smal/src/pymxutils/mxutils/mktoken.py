@@ -12,4 +12,5 @@ def mktoken():
 
     r = lib.cli_mkmxtoken(mxid, pw)
     result = ffi.string(r)
+    lib.FreeCString(r)
     print(result)

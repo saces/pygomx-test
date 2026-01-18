@@ -11,4 +11,5 @@ def serverinfo():
 
     r = lib.cli_serverinfo(mxdomain)
     result = ffi.string(r)
+    lib.FreeCString(r)
     print(result)

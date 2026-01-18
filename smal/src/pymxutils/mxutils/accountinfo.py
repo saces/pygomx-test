@@ -12,4 +12,5 @@ def accountinfo():
 
     r = lib.cli_accountinfo(url, tk)
     result = ffi.string(r)
+    lib.FreeCString(r)
     print(result)

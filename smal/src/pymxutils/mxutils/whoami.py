@@ -12,4 +12,5 @@ def whoami():
 
     r = lib.cli_whoami(url, tk)
     result = ffi.string(r)
+    lib.FreeCString(r)
     print(result)

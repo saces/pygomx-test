@@ -5,9 +5,18 @@ package main
 import (
 	"fmt"
 	"mxclientlib/mxclient"
+	"unsafe"
 )
 
+/*
+#include <stdlib.h>
+*/
 import "C"
+
+//export FreeCString
+func FreeCString(s *C.char) {
+	C.free(unsafe.Pointer(s))
+}
 
 /*
 cli tools
