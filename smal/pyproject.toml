@@ -21,7 +21,7 @@ classifiers = [
 "smbl" = "src/smbl"
 
 [project.urls]
-repository = "https://code.c-base.org/saces/pygomx"
+repository = "https://codeberg.org/saces/pygomx"
 
 [tool.distutils.egg_info]
 egg_base = "/tmp"
