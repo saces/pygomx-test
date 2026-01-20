@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"mxclientlib/mxclient"
 	"unsafe"
 )
@@ -72,11 +71,6 @@ high api
 */
 //export createclient
 func createclient(url *C.char, userID *C.char, accessToken *C.char) C.int {
-	err := mxclient.CreateClient(C.GoString(url), C.GoString(userID), C.GoString(accessToken))
-	if err != nil {
-		fmt.Printf("ERR: %v", err)
-		return 1
-	}
 	return 0
 }
 
