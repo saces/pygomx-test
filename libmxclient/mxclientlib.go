@@ -3,7 +3,7 @@
 package main
 
 import (
-	"mxclientlib/mxclient"
+	"mxclientlib/mxutils"
 	"unsafe"
 )
 
@@ -23,7 +23,7 @@ cli tools
 //export cli_discoverhs
 func cli_discoverhs(id *C.char) *C.char {
 	mxid := C.GoString(id)
-	result := mxclient.DiscoverHS(mxid)
+	result := mxutils.DiscoverHS(mxid)
 	return C.CString(result)
 }
 
@@ -31,7 +31,7 @@ func cli_discoverhs(id *C.char) *C.char {
 func cli_mkmxtoken(id *C.char, pw *C.char) *C.char {
 	mxid := C.GoString(id)
 	mxpw := C.GoString(pw)
-	result := mxclient.MkToken(mxid, mxpw)
+	result := mxutils.MkToken(mxid, mxpw)
 	return C.CString(result)
 }
 
@@ -39,7 +39,7 @@ func cli_mkmxtoken(id *C.char, pw *C.char) *C.char {
 func cli_whoami(hs *C.char, tk *C.char) *C.char {
 	_hs := C.GoString(hs)
 	_tk := C.GoString(tk)
-	result := mxclient.Whoami(_hs, _tk)
+	result := mxutils.Whoami(_hs, _tk)
 	return C.CString(result)
 }
 
@@ -47,7 +47,7 @@ func cli_whoami(hs *C.char, tk *C.char) *C.char {
 func cli_accountinfo(hs *C.char, tk *C.char) *C.char {
 	_hs := C.GoString(hs)
 	_tk := C.GoString(tk)
-	result := mxclient.AccountInfo(_hs, _tk)
+	result := mxutils.AccountInfo(_hs, _tk)
 	return C.CString(result)
 }
 
@@ -55,14 +55,14 @@ func cli_accountinfo(hs *C.char, tk *C.char) *C.char {
 func cli_clearaccount(hs *C.char, tk *C.char) *C.char {
 	_hs := C.GoString(hs)
 	_tk := C.GoString(tk)
-	result := mxclient.ClearAccount(_hs, _tk)
+	result := mxutils.ClearAccount(_hs, _tk)
 	return C.CString(result)
 }
 
 //export cli_serverinfo
 func cli_serverinfo(url *C.char) *C.char {
 	_url := C.GoString(url)
-	result := mxclient.ServerInfo(_url)
+	result := mxutils.ServerInfo(_url)
 	return C.CString(result)
 }
 
