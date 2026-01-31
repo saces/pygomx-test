@@ -15,8 +15,6 @@ ffibuilder.cdef(
     csource="""
     typedef void (*on_event_handler_ptr) (char*);
     typedef void (*on_message_handler_ptr) (char*);
-    extern void  register_on_event_handler(on_event_handler_ptr ptr);
-    extern void  register_on_message_handler(on_message_handler_ptr ptr);
     extern void  FreeCString(char* s);
     extern char* cli_discoverhs(char* mxid);
     extern char* cli_mkmxtoken(char* mxid, char* pw);
@@ -24,7 +22,21 @@ ffibuilder.cdef(
     extern char* cli_accountinfo(char* hs, char* accessToken);
     extern char* cli_clearaccount(char* hs, char* accessToken);
     extern char* cli_serverinfo(char* url);
-    extern int   createclient(char* url, char* userID, char* accessToken);
+    extern int   apiv0_initialize();
+    extern int   apiv0_deinitialize();
+    extern char* apiv0_discover(char* mxid);
+    extern char* apiv0_login(char* data);
+    extern char* apiv0_createclient(char* storage_path, char* hs, char* mxid, char* accessToken);
+    extern char* apiv0_createclient_pass(char* mxpassfile, char* storage_path, char* hs, char* localpart, char* domain);   
+    extern char* apiv0_set_on_event_handler(int cid, on_event_handler_ptr ptr);
+    extern char* apiv0_set_on_message_handler(int cid, on_message_handler_ptr ptr);
+    extern char* apiv0_startclient(int cid);
+    extern char* apiv0_stopclient(int cid);
+    extern char* apiv0_sendmessage(int cid, char* data);
+    extern int   apiv0_removeclient(int cid);
+    extern char* apiv0_listclients();
+    extern char* apiv0_getoptions(int cid);
+    extern int   apiv0_setoptions(int cid, char* opts);
     """
 )
 

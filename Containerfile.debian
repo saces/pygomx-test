@@ -6,6 +6,9 @@ ARG PYTHON_VERSION=3.14
 
 FROM docker.io/library/golang:${GOLANG_VERSION}-${DEBIAN_VERSION} AS gobuilder
 
+RUN apt update
+RUN apt -y install libolm-dev
+
 RUN --mount=type=bind,source=./libmxclient/go.mod,target=/libmxclient/build/go.mod --mount=type=bind,source=./libmxclient/go.sum,target=/libmxclient/build/go.sum <<EOF
 cd /libmxclient/build
 go mod download
@@ -32,11 +35,23 @@ python3 build_ffi.py
 ls -la *.so
 EOF
 
-FROM docker.io/library/python:${PYTHON_VERSION}-${DEBIAN_VERSION}
+FROM docker.io/library/python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS develop
 ENV PYTHONUNBUFFERED=1
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN pip install cffi
 
+RUN apt update
+RUN apt -y install libolm3
+
 COPY --from=gobuilder /pygomx-build/libmxclient.so /usr/local/lib/
 COPY --from=pybuilder /pygomx/_pygomx.cpython-314-x86_64-linux-gnu.so /usr/local/lib/python3.14/site-packages/
 RUN ldconfig
+
+FROM develop AS demobot
+WORKDIR /smal
+COPY smal /smal
+RUN pip install .
+
+WORKDIR /demobot
+
+CMD [ "demobot" ]

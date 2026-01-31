@@ -9,7 +9,7 @@ requires-python = ">=3.11"
 description = "smal - simple matrix application library"
 authors = [{ name = "saces" }]
 license = "AGPL-3.0-only"
-readme = "README"
+readme = "README.txt"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
@@ -19,6 +19,7 @@ classifiers = [
 "pymxutils" = "src/pymxutils"
 "smal" = "src/smal"
 "smbl" = "src/smbl"
+"demobot" = "src/demobot"
 
 [project.urls]
 repository = "https://codeberg.org/saces/pygomx"
@@ -34,3 +35,4 @@ mxaccountinfo = "pymxutils.mxutils:accountinfo"
 mxclearaccount = "pymxutils.mxutils:clearaccount"
 mxserverinfo = "pymxutils.mxutils:serverinfo"
 smalsetup = "smal.smalsetup:smalsetup"
+demobot = "demobot:main"

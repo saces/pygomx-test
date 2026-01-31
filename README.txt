@@ -3,10 +3,25 @@ monorepos to have the right versions together
 libmxclient - golang matrix client library
 pygomx - python binding
 smal - python matrix lib
-echobot - simple bot
 
 
-docker compose build
+run the demobot:
+
+docker compose build demobot
+docker compose run --rm demobot smalsetup <matrixid>
+docker compose up -d demobot
+
+the bot follows each invite (autojoin) and have two commands:
+  !stop - graceful shutdown
+  !echo - reply 
+
+
+develop:
+
+for installing/editing things it is run as root inside the container.
+
+
+docker compose build dev
 docker compose run --rm dev /bin/bash
 
 
@@ -38,3 +53,7 @@ try to discover from:  b'matrix.org'
 Attempt to discover 'matrix.org'
 b'{"m.homeserver":{"base_url":"https://matrix-client.matrix.org"},"m.identity_server":{"base_url":"https://vector.im"}}'
 root@b2f35adb64b0:/smal#
+
+docker compose build demobot
+docker compose run --rm  --user $(id -u):$(id -g) -v /local/path/to/data/dir:/demobot demobot smalsetup
+docker compose run --rm  --user $(id -u):$(id -g) -v /local/path/to/data/dir:/demobot demobot demobot

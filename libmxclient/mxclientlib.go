@@ -3,14 +3,87 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"mxclientlib/mxapi"
+	"mxclientlib/mxclient"
 	"mxclientlib/mxutils"
 	"unsafe"
+
+	"maunium.net/go/mautrix/id"
 )
 
 /*
 #include <stdlib.h>
+typedef void (*on_event_handler_ptr) (char*);
+typedef void (*on_message_handler_ptr) (char*);
+
+static inline void call_c_on_event_handler(on_event_handler_ptr ptr, char* jsonStr) {
+    (ptr)(jsonStr);
+}
+
+static inline void call_c_on_message_handler(on_message_handler_ptr ptr, char* jsonStr) {
+    (ptr)(jsonStr);
+}
+
 */
 import "C"
+
+/*
+matrix client with c callback
+*/
+type CBClient struct {
+	*mxclient.MXClient
+	on_event_handler   C.on_event_handler_ptr
+	on_message_handler C.on_message_handler_ptr
+}
+
+func (cli *CBClient) OnEvent(s string) {
+	cStr := C.CString(s)
+	defer C.free(unsafe.Pointer(cStr))
+	C.call_c_on_event_handler(cli.on_event_handler, cStr)
+}
+
+func (cli *CBClient) OnMessage(s string) {
+	cStr := C.CString(s)
+	defer C.free(unsafe.Pointer(cStr))
+	C.call_c_on_message_handler(cli.on_message_handler, cStr)
+}
+
+func (cli *CBClient) Set_on_event_handler(fn C.on_event_handler_ptr) {
+	cli.on_event_handler = fn
+}
+
+func (cli *CBClient) Set_on_message_handler(fn C.on_message_handler_ptr) {
+	cli.on_message_handler = fn
+}
+
+// NewCClient creates a new Matrix Client ready for syncing
+func NewCBClient(homeserverURL string, userID id.UserID, accessToken string) (*CBClient, error) {
+	client, err := mxclient.NewMXClient(homeserverURL, userID, accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return &CBClient{client, nil, nil}, nil
+}
+
+/*
+account/client management
+*/
+var cclients []*CBClient
+
+func getClient(id int) (*CBClient, error) {
+	if id < 0 || id >= len(cclients) {
+		return nil, fmt.Errorf("index out of bounds: '%d'", id)
+	}
+	res := cclients[id]
+	return res, nil
+}
+
+/*
+helperse
+*/
 
 //export FreeCString
 func FreeCString(s *C.char) {
@@ -20,6 +93,7 @@ func FreeCString(s *C.char) {
 /*
 cli tools
 */
+
 //export cli_discoverhs
 func cli_discoverhs(id *C.char) *C.char {
 	mxid := C.GoString(id)
@@ -67,15 +141,149 @@ func cli_serverinfo(url *C.char) *C.char {
 }
 
 /*
-high api
+high level api, supports multiple clients
+the same handler can be attached to multiple clients
 */
-//export createclient
-func createclient(url *C.char, userID *C.char, accessToken *C.char) C.int {
+
+//export apiv0_initialize
+func apiv0_initialize() C.int {
 	return 0
 }
 
-//export shutdown
-func shutdown() C.int {
+//export apiv0_deinitialize
+func apiv0_deinitialize() C.int {
+	return 0
+}
+
+//export apiv0_discover
+func apiv0_discover(mxid *C.char) *C.char {
+	result, err := mxapi.Discover(C.GoString(mxid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	return C.CString(result)
+}
+
+//export apiv0_login
+func apiv0_login(data *C.char) *C.char {
+	result, err := mxapi.Login(C.GoString(data))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	return C.CString(result)
+}
+
+//export apiv0_createclient
+func apiv0_createclient(storage_path *C.char, url *C.char, userID *C.char, accessToken *C.char) *C.char {
+	mxclient, err := mxclient.CreateClient(C.GoString(storage_path), C.GoString(url), C.GoString(userID), C.GoString(accessToken))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	client := &CBClient{mxclient, nil, nil}
+	cclients = append(cclients, client)
+	return C.CString(fmt.Sprintf("{ \"id:\"SUCESS. ID=%d\n", len(cclients)))
+}
+
+//export apiv0_createclient_pass
+func apiv0_createclient_pass(mxpassfile_path *C.char, storage_path *C.char, url *C.char, localpart *C.char, domain *C.char) *C.char {
+	mxclient, err := mxclient.CreateClientPass(C.GoString(mxpassfile_path), C.GoString(storage_path), C.GoString(url), C.GoString(localpart), C.GoString(domain))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	client := &CBClient{mxclient, nil, nil}
+	mxclient.OnEvent = client.OnEvent
+	mxclient.OnMessage = client.OnMessage
+	cclients = append(cclients, client)
+	out, err := json.Marshal(map[string]int{"id": len(cclients) - 1})
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	s := string(out)
+	return C.CString(s)
+}
+
+//export apiv0_set_on_event_handler
+func apiv0_set_on_event_handler(cid C.int, fn C.on_event_handler_ptr) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+
+	cli.Set_on_event_handler(fn)
+	return C.CString("SUCCESS.")
+}
+
+//export apiv0_set_on_message_handler
+func apiv0_set_on_message_handler(cid C.int, fn C.on_message_handler_ptr) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+
+	cli.Set_on_message_handler(fn)
+	return C.CString("SUCCESS.")
+}
+
+//export apiv0_startclient
+func apiv0_startclient(cid C.int) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+
+	err = cli.Sync()
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	return C.CString("SUCCESS.")
+}
+
+//export apiv0_stopclient
+func apiv0_stopclient(cid C.int) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	cli.StopSync()
+	// TODO kill current sync request (client.client.http.cancel() or so)
+	return C.CString("SUCCESS.")
+}
+
+//export apiv0_sendmessage
+func apiv0_sendmessage(cid C.int, data *C.char) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	result, err := cli.SendRoomMessage(context.Background(), C.GoString(data))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	out, err := json.Marshal(result)
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	s := string(out)
+	return C.CString(s)
+}
+
+//export apiv0_removeclient
+func apiv0_removeclient(cid C.int) C.int {
+	return 0
+}
+
+//export apiv0_listclients
+func apiv0_listclients() *C.char {
+	return C.CString("{}")
+}
+
+//export apiv0_getoptions
+func apiv0_getoptions(cid C.int) *C.char {
+	return C.CString("{}")
+}
+
+//export apiv0_setoptions
+func apiv0_setoptions(cid C.int, opts *C.char) C.int {
 	return 0
 }
 

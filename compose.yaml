@@ -3,6 +3,21 @@ services:
     build:
       context: .
       dockerfile: Containerfile.debian
+      target: develop
     working_dir: /smal
     volumes:
       - ./smal:/smal:ro
+      - ./work:/work
+
+  demobot:
+    build:
+      context: .
+      dockerfile: Containerfile.debian
+      target: demobot
+    command: demobot
+    volumes:
+      - demobot_data:/demobot
+    restart: unless-stopped
+
+volumes:
+  demobot_data:
