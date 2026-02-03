@@ -42,13 +42,13 @@ class DemoBot(SMALBot):
 
         if msg["content"]["body"] == "!stop":
             logger.info(f"stopping the bot")
-            bot.stop()
+            self.stop()
             return
 
         if msg["content"]["body"].startswith("!echo"):
             logger.error(f"reply to this: {msg}")
 
-            bot.sendmessage(msg["roomid"], "huhu")
+            self.sendmessage(msg["roomid"], "huhu")
 
             return
 
@@ -57,7 +57,6 @@ class DemoBot(SMALBot):
 
 def main():
     # create and run the bot
-    global bot
     bot = DemoBot(DEFAULT_PREFIX)
     bot.run()
 
