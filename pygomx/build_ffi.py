@@ -13,8 +13,8 @@ ffibuilder.set_source(
 
 ffibuilder.cdef(
     csource="""
-    typedef void (*on_event_handler_ptr) (char*);
-    typedef void (*on_message_handler_ptr) (char*);
+    typedef void (*on_event_handler_ptr) (char*, void*);
+    typedef void (*on_message_handler_ptr) (char*, void*);
     extern void  FreeCString(char* s);
     extern char* cli_discoverhs(char* mxid);
     extern char* cli_mkmxtoken(char* mxid, char* pw);
@@ -28,8 +28,8 @@ ffibuilder.cdef(
     extern char* apiv0_login(char* data);
     extern char* apiv0_createclient(char* storage_path, char* hs, char* mxid, char* accessToken);
     extern char* apiv0_createclient_pass(char* mxpassfile, char* storage_path, char* hs, char* localpart, char* domain);   
-    extern char* apiv0_set_on_event_handler(int cid, on_event_handler_ptr ptr);
-    extern char* apiv0_set_on_message_handler(int cid, on_message_handler_ptr ptr);
+    extern char* apiv0_set_on_event_handler(int cid, on_event_handler_ptr ptr, void* pobj);
+    extern char* apiv0_set_on_message_handler(int cid, on_message_handler_ptr ptr, void* pobj);
     extern char* apiv0_startclient(int cid);
     extern char* apiv0_stopclient(int cid);
     extern char* apiv0_sendmessage(int cid, char* data);
