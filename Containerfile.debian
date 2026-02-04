@@ -35,13 +35,17 @@ python3 build_ffi.py
 ls -la *.so
 EOF
 
-FROM docker.io/library/python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS develop
+FROM docker.io/library/python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION} AS develop
 ENV PYTHONUNBUFFERED=1
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN pip install cffi
 
-RUN apt update
-RUN apt -y install libolm3
+RUN <<EOF
+apt update
+apt -y upgrade
+apt -y install libolm3
+rm -rf /var/lib/apt/lists/*
+EOF
 
 COPY --from=gobuilder /pygomx-build/libmxclient.so /usr/local/lib/
 COPY --from=pybuilder /pygomx/_pygomx.cpython-314-x86_64-linux-gnu.so /usr/local/lib/python3.14/site-packages/
