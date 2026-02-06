@@ -7,6 +7,22 @@ from .errors import APIError
 logger = logging.getLogger(__name__)
 
 
+def checkApiError(cstr):
+    result = ffi.string(cstr).decode("utf-8")
+    lib.FreeCString(cstr)
+
+    if result.startswith("ERR:"):
+        raise APIError(result)
+
+    if result == "SUCCESS.":
+        return
+
+    logger.debug(result)
+
+    result_dict = json.loads(result)
+    return result_dict
+
+
 class _MXClient:
     """
     core binding
@@ -49,19 +65,11 @@ class _MXClient:
 
     def _sync(self):
         r = lib.apiv0_startclient(self.client_id)
-        result = ffi.string(r)
-        lib.FreeCString(r)
-        # if result.startswith(b"ERR:"):
-        #    raise APIError(result)
-        print("_sync: ", result)
+        checkApiError(r)
 
     def _stopsync(self):
         r = lib.apiv0_stopclient(self.client_id)
-        result = ffi.string(r)
-        lib.FreeCString(r)
-        # if result.startswith(b"ERR:"):
-        #    raise APIError(result)
-        print("_stopsync: ", result)
+        checkApiError(r)
 
     def _sendmessage(self, data_dict):
         data = json.dumps(data_dict).encode(encoding="utf-8")
