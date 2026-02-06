@@ -74,11 +74,8 @@ class _MXClient:
     def _sendmessage(self, data_dict):
         data = json.dumps(data_dict).encode(encoding="utf-8")
         r = lib.apiv0_sendmessage(self.client_id, data)
-        result = ffi.string(r)
-        lib.FreeCString(r)
-        # if result.startswith(b"ERR:"):
-        #    raise APIError(result)
-        print("_sendmessage: ", result)
+        result = checkApiError(r)
+        return result
 
     def process_event(self, evt):
         if hasattr(self, "on_event") and callable(self.on_event):

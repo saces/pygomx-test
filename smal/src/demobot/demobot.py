@@ -48,7 +48,13 @@ class DemoBot(SMALBot):
         if msg["content"]["body"].startswith("!echo"):
             logger.error(f"reply to this: {msg}")
 
-            self.sendmessage(msg["roomid"], "huhu")
+            txt = msg["content"]["body"][5:].strip()
+
+            if txt.strip() == "":
+                txt = "Are you kidding me?"
+
+            # self.sendmessage(msg["roomid"], txt)
+            self.sendmessagereply(msg["roomid"], msg["id"], msg["sender"], txt)
 
             return
 

@@ -75,14 +75,10 @@ func (mxc *MXClient) _onMessage(ctx context.Context, evt *event.Event) {
 	*/
 }
 
-type sendmessage_data_content struct {
-	Body string `json:"body"`
-}
-
 type sendmessage_data struct {
-	RoomId  id.RoomID                `json:"roomid"`
-	Type    event.Type               `json:"type"`
-	Content sendmessage_data_content `json:"content"`
+	RoomId  id.RoomID      `json:"roomid"`
+	Type    event.Type     `json:"type"`
+	Content map[string]any `json:"content"`
 }
 
 func (mxc *MXClient) SendRoomMessage(ctx context.Context, data string) (*mautrix.RespSendEvent, error) {
