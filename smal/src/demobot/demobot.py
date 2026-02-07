@@ -45,6 +45,11 @@ class DemoBot(SMALBot):
             self.stop()
             return
 
+        if msg["content"]["body"] == "!leave":
+            logger.info(f"leaving room {msg['roomid']}")
+            self.leaveroom(msg["roomid"])
+            return
+
         if msg["content"]["body"].startswith("!echo"):
             logger.error(f"reply to this: {msg}")
 

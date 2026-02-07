@@ -287,6 +287,23 @@ func apiv0_sendmessage(cid C.int, data *C.char) *C.char {
 	return C.CString(s)
 }
 
+//export apiv0_leaveroom
+func apiv0_leaveroom(cid C.int, roomid *C.char) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	_, err = cli.LeaveRoom(context.Background(), id.RoomID(C.GoString(roomid)))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	_, err = cli.ForgetRoom(context.Background(), id.RoomID(C.GoString(roomid)))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	return C.CString("SUCCESS.")
+}
+
 //export apiv0_removeclient
 func apiv0_removeclient(cid C.int) C.int {
 	return 0

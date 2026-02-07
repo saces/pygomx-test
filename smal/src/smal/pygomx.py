@@ -77,6 +77,10 @@ class _MXClient:
         result = checkApiError(r)
         return result
 
+    def leaveroom(self, roomid):
+        r = lib.apiv0_leaveroom(self.client_id, roomid.encode(encoding="utf-8"))
+        checkApiError(r)
+
     def process_event(self, evt):
         if hasattr(self, "on_event") and callable(self.on_event):
             self.on_event(evt)
