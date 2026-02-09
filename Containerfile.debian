@@ -27,7 +27,7 @@ COPY --from=gobuilder /pygomx-build/libmxclient.h /usr/local/include/libmxclient
 
 RUN pip install cffi setuptools
 
-COPY pygomx /pygomx
+COPY pygomx-module /pygomx
 
 RUN <<EOF
 cd /pygomx
