@@ -1,59 +1,51 @@
 monorepos to have the right versions together
 
 libmxclient - golang matrix client library
-pygomx - python binding
+pygomx-module - python binding package
 smal - python matrix lib
 
 
-run the demobot:
+just run the demobot (docker):
 
 docker compose build demobot
 docker compose run --rm demobot smalsetup <matrixid>
 docker compose up -d demobot
 
 the bot follows each invite (autojoin) and have two commands:
-  !stop - graceful shutdown
-  !echo - reply 
+  !stop         - graceful shutdown
+  !echo [text]  - in a DM the bot responds with 'text',
+                  in regular rooms it is a reply.
 
+install (venv):
 
-develop:
+    (create and activate a venv)
 
-for installing/editing things it is run as root inside the container.
+    cd pygomx-module
+    pip install -r requirements.txt
+    make install
 
+    (run 'make clean' to remove any generated)
 
-docker compose build dev
-docker compose run --rm dev /bin/bash
+    cd ../smal
+    pip install [-e] .
 
+usage:
 
-pip install -e .
-mxdiscover <mxid>
+  cd into an empty dir (you might create one)
 
+  smalsetup <matrixid>
+    this command creates a credentials file (.mxpass) in the current dir.
+    autopickup by all tools & bots that requires credentials, no further configuration required
 
----
-screenshot:
-~/p/m/pygomx (main|✚1) $ docker compose run --rm dev /bin/bash
-root@7c2a56098d3c:/smal#
-Container pygomx-dev-run-121767d34a7a Creating
-Container pygomx-dev-run-121767d34a7a Created
-root@b2f35adb64b0:/smal# pip install -e .
-Obtaining file:///smal
-  Installing build dependencies ... done
-  Checking if build backend supports build_editable ... done
-  Getting requirements to build editable ... done
-  Preparing editable metadata (pyproject.toml) ... done
-Building wheels for collected packages: smal
-  Building editable for smal (pyproject.toml) ... done
-  Created wheel for smal: filename=smal-0.0.1-0.editable-py3-none-any.whl size=3096 sha256=9291e8de463dc781d713da5751bd16422769ba30c47760c7b5f27361a3752e77
-  Stored in directory: /tmp/pip-ephem-wheel-cache-qjjjkcin/wheels/1f/23/eb/fa46f9ff6c1c46feaa27e5ffad7cb966e7aee46d5794e2d15f
-Successfully built smal
-Installing collected packages: smal
-Successfully installed smal-0.0.1
-root@b2f35adb64b0:/smal# mxdiscover matrix.org
-try to discover from:  b'matrix.org'
-Attempt to discover 'matrix.org'
-b'{"m.homeserver":{"base_url":"https://matrix-client.matrix.org"},"m.identity_server":{"base_url":"https://vector.im"}}'
-root@b2f35adb64b0:/smal#
+  commands:
+    mxdiscover
+    mxwhoami
+    mxtoken
+    mxaccountinfo
+    mxclearaccount
+    mxserverinfo
+    demobot
 
-docker compose build demobot
-docker compose run --rm  --user $(id -u):$(id -g) -v /local/path/to/data/dir:/demobot demobot smalsetup
-docker compose run --rm  --user $(id -u):$(id -g) -v /local/path/to/data/dir:/demobot demobot demobot
+matrix room:
+  #pygomx:matrix.org
+  https://matrix.to/#/#pygomx:matrix.org
