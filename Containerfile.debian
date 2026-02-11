@@ -22,6 +22,10 @@ EOF
 FROM docker.io/library/python:${PYTHON_VERSION}-${DEBIAN_VERSION} AS pybuilder
 ENV PYTHONUNBUFFERED=1
 ENV PIP_ROOT_USER_ACTION=ignore
+
+RUN apt update
+RUN apt -y install libolm-dev
+
 COPY --from=gobuilder /pygomx-build/libmxclient.so /usr/local/lib/libmxclient.so
 COPY --from=gobuilder /pygomx-build/libmxclient.h /usr/local/include/libmxclient.h
 
