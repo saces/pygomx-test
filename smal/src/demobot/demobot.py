@@ -29,9 +29,8 @@ class DemoBot(SMALBot):
             logger.error(f"not a room message: {msg}")
             return
 
-        if msg["sender"] == "get own id from missing code":
+        if msg["sender"] == self.UserID:
             # ignore own messages
-            # for now just do not send valid commands by yourself
             logger.info(f"ignore own message: {msg}")
             return
 

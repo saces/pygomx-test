@@ -62,6 +62,8 @@ class _MXClient:
 
         result_dict = json.loads(result)
         self.client_id = result_dict["id"]
+        self.UserID = result_dict["userid"]
+        self.DeviceID = result_dict["deviceid"]
 
     def _sync(self):
         r = lib.apiv0_startclient(self.client_id)

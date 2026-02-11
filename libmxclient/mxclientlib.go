@@ -202,7 +202,7 @@ func apiv0_createclient_pass(mxpassfile_path *C.char, storage_path *C.char, url 
 	mxclient.OnEvent = client.OnEvent
 	mxclient.OnMessage = client.OnMessage
 	cclients = append(cclients, client)
-	out, err := json.Marshal(map[string]int{"id": len(cclients) - 1})
+	out, err := json.Marshal(map[string]any{"id": len(cclients) - 1, "userid": client.UserID.String(), "deviceid": client.DeviceID.String()})
 	if err != nil {
 		return C.CString(fmt.Sprintf("ERR: %v", err))
 	}
