@@ -1,7 +1,4 @@
-import os
-from time import time_ns
 import logging
-import json
 from smal.bot import SMALBot
 
 # setup logging, we want timestamps
