@@ -1,5 +1,15 @@
 #!/usr/bin/python
+import sys
 from cffi import FFI
+
+lib_list = [
+    "mxclient",
+]
+
+if len(sys.argv) > 1:
+    lib_list += sys.argv[1:]
+
+print(f"liblist: {lib_list}")
 
 ffibuilder = FFI()
 
@@ -8,7 +18,7 @@ ffibuilder.set_source(
     source=""" //passed to the real C compiler
         #include "libmxclient.h"
     """,
-    libraries=["mxclient", "olm"],
+    libraries=lib_list,
     library_dirs=["."],
     include_dirs=["."],
 )
