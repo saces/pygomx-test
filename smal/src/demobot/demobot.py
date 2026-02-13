@@ -61,10 +61,25 @@ class DemoBot(SMALBot):
 
         logger.info(f"ignored a message: {msg}")
 
+    def listjoinedrooms(self):
+        roomlist = self.joinedrooms()
+        for room in roomlist:
+            if room["is_direct"]:
+                txt = "Hey, I'm back for secret talk :)"
+            else:
+                txt = "I'm back online."
+            self.sendnotice(room["roomid"], txt)
+
 
 def main():
-    # create and run the bot
+    # create and initialize the bot
     bot = DemoBot(DEFAULT_PREFIX)
+
+    # the bot's matrix client is ready to use now
+    # request the list of joined rooms
+    bot.listjoinedrooms()
+
+    # start syncing forever (listen for incommmig messages/events)
     bot.run()
 
 
