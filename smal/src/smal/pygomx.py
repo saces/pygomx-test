@@ -81,6 +81,10 @@ class _MXClient:
         r = lib.apiv0_leaveroom(self.client_id, roomid.encode(encoding="utf-8"))
         checkApiError(r)
 
+    def joinedrooms(self):
+        r = lib.apiv0_joinedrooms(self.client_id)
+        return checkApiError(r)
+
     def process_event(self, evt):
         if hasattr(self, "on_event") and callable(self.on_event):
             self.on_event(evt)

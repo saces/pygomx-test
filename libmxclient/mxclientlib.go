@@ -300,6 +300,35 @@ func apiv0_leaveroom(cid C.int, roomid *C.char) *C.char {
 	return C.CString("SUCCESS.")
 }
 
+//export apiv0_joinedrooms
+func apiv0_joinedrooms(cid C.int) *C.char {
+	cli, err := getClient(int(cid))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	resp, err := cli.JoinedRooms(context.Background())
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+
+	type roomListItem struct {
+		RoomId   id.RoomID `json:"roomid"`
+		IsDirect bool      `json:"is_direct"`
+	}
+
+	var roomList []roomListItem
+
+	for _, room := range resp.JoinedRooms {
+		roomList = append(roomList, roomListItem{RoomId: room, IsDirect: cli.IsDirectRoom(room)})
+	}
+	out, err := json.Marshal(roomList)
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	s := string(out)
+	return C.CString(s)
+}
+
 //export apiv0_removeclient
 func apiv0_removeclient(cid C.int) C.int {
 	return 0
