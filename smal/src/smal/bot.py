@@ -48,3 +48,12 @@ class SMALBot(SMALApp):
         data["content"]["m.relates_to"]["m.in_reply_to"]["event_id"] = msgid
 
         self._sendmessage(data)
+
+    def sendnotice(self, roomid, text):
+        data = {}
+        data["roomid"] = roomid
+        data["content"] = {}
+        data["content"]["body"] = text
+        data["content"]["msgtype"] = "m.notice"
+
+        self._sendmessage(data)
