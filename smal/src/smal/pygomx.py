@@ -94,7 +94,6 @@ class _MXClient:
             self.on_message(msg)
         else:
             logger.warn(f"got message but on_message not declared: {msg}")
-            self._stopsync()
 
 
 @ffi.callback("void(char*, void*)")
