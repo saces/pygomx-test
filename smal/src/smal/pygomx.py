@@ -31,10 +31,8 @@ class _MXClient:
     def __init__(self):
         super().__init__()
         self._createMXClient()
-        # ffi_selfhandle = ffi.new_handle(self)
-        # self._ffi_selfhandle = ffi_selfhandle
+        # create a c-handle for self and keep it alive
         self._ffi_selfhandle = ffi.new_handle(self)
-        # self._ffi_selfhandle = ffi_selfhandle
 
         r = lib.apiv0_set_on_event_handler(
             self.client_id, on_event_callback, self._ffi_selfhandle
