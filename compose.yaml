@@ -19,5 +19,64 @@ services:
       - demobot_data:/demobot
     restart: unless-stopped
 
+  dind:
+    build:
+      context: .
+      pull: true
+      dockerfile_inline: |
+        # syntax=docker/dockerfile:1
+        FROM docker.io/library/docker:dind-rootless
+        USER root
+        RUN mkdir /woodpecker && chmod 0777 /woodpecker
+        USER rootless
+        RUN mkdir -p /home/rootless/dockersock
+
+    command: ['dockerd', '-H', 'unix:///home/rootless/dockersock/docker.sock', '--tls=false']
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - dind-run:/home/rootless/dockersock
+      - dind-data:/home/rootless/.local/share/docker
+      - .:/woodpecker
+    environment:
+      DOCKER_HOST: 'unix:///home/rootless/dockersock/docker.sock'
+    healthcheck:
+      test: ["CMD-SHELL", "docker", "info"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  go-build-test:
+    build:
+      context: .
+      pull: true
+      dockerfile_inline: |
+        # syntax=docker/dockerfile:1
+        FROM docker.io/woodpeckerci/woodpecker-cli:next-alpine
+        USER root
+        RUN <<EOF
+          set -e
+          addgroup -g 2375 -S docker
+          addgroup -g 102374 -S dind
+          addgroup woodpecker docker
+          addgroup woodpecker dind
+        EOF
+        USER woodpecker
+    command: exec .woodpecker/go-buildtest.yaml
+    restart: no
+    environment:
+      DOCKER_HOST: 'unix:///var/run/dind/docker.sock'
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - dind-run:/var/run/dind
+      - .:/woodpecker:ro
+    depends_on:
+      dind:
+        condition: service_healthy
+
 volumes:
   demobot_data:
+  dind-run:
+  dind-data:
