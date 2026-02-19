@@ -38,7 +38,7 @@ usage:
     autopickup by all tools & bots that requires credentials, no further configuration required
 
   commands:
-    mxdiscover
+    mxdiscover --help
     mxwhoami
     mxtoken
     mxaccountinfo

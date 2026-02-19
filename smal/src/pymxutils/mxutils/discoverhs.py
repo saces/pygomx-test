@@ -1,17 +1,20 @@
 import sys
 from _pygomx import lib, ffi
+import click
+import json
 
 
-def discoverhs():
-    if len(sys.argv) != 2:
-        print("usage: ", sys.argv[0], "  matrixid|domainname")
-        return 1
-
-    mxid = sys.argv[1].encode(encoding="utf-8")
-
-    print("try to discover from: ", mxid)
+@click.command()
+@click.argument("domain", metavar="string")
+def discoverhs(domain):
+    """Attempts to discover the homeserver from the given string"""
+    mxid = domain.encode(encoding="utf-8")
 
     r = lib.cli_discoverhs(mxid)
-    result = ffi.string(r)
+    result = ffi.string(r).decode("utf-8")
     lib.FreeCString(r)
-    print(result)
+    if result.startswith("ERR:"):
+        print(result)
+        sys.exit(1)
+    result_dict = json.loads(result)
+    print(result_dict["m.homeserver"]["base_url"])

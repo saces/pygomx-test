@@ -28,8 +28,6 @@ func DiscoverHS(ids string) string {
 		domainname = _hs
 	}
 
-	fmt.Printf("Attempt to discover '%s'\n", domainname)
-
 	wk, err := mautrix.DiscoverClientAPI(context.Background(), domainname)
 	if err != nil {
 		return fmt.Sprintf("ERR: %v", err)
