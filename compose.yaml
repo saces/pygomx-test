@@ -53,7 +53,18 @@ services:
       pull: true
       dockerfile_inline: |
         # syntax=docker/dockerfile:1
+        FROM docker.io/golang:1.26 AS gobuild
+
+        WORKDIR /woodpeckerhack
+
+        RUN git clone -b cli-exec-matrix https://codeberg.org/saces/woodpecker.git .
+        RUN --mount=type=cache,target=/root/.cache/go-build \
+            --mount=type=cache,target=/go/pkg \
+            make build-cli
+
         FROM docker.io/woodpeckerci/woodpecker-cli:next-alpine
+        COPY --from=gobuild /woodpeckerhack/dist/woodpecker-cli /bin/
+
         USER root
         RUN <<EOF
           set -e
