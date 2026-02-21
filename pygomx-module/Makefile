@@ -10,6 +10,24 @@ ifndef OLM_FLAVOUR
   OLM_FLAVOUR = colm
 endif
 
+ifndef GO_TAGS
+  GO_TAGS =
+else
+  GO_TAGS += ,
+endif
+
+ifeq ($(OLM_FLAVOUR),none)
+    GO_TAGS += nocrypto
+else ifeq ($(OLM_FLAVOUR),colm)
+    GO_TAGS += colm
+else ifeq ($(OLM_FLAVOUR),goolm)
+    GO_TAGS += goolm
+else ifeq ($(OLM_FLAVOUR),vodozemac)
+    GO_TAGS += vodozemac
+else
+  $(error unknown OLM_FLAVOUR $(OLM_FLAVOUR))
+endif
+
 
 # calculate configuration matrix
 
@@ -48,7 +66,7 @@ _pygomx.o: libmxclient.h build_ffi.py
 
 libmxclient.h: ../libmxclient/go.mod ../libmxclient/go.sum $(SOURCE_GO)
 	cd ../libmxclient/ && \
-	CGO_ENABLED=1 go build -buildmode=$(build_mode_name) -o $(GO_OUTDIR)/libmxclient.$(build_mode_ext) .
+	CGO_ENABLED=1 go build -buildmode=$(build_mode_name) -tags $(GO_TAGS) -o $(GO_OUTDIR)/libmxclient.$(build_mode_ext) .
 
 .PHONY:
 clean:
