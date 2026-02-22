@@ -57,7 +57,7 @@ services:
 
         WORKDIR /woodpeckerhack
 
-        RUN git clone -b cli-exec-matrix https://codeberg.org/saces/woodpecker.git .
+        RUN git clone -b cli-exec-matrix-fix https://codeberg.org/saces/woodpecker.git .
         RUN --mount=type=cache,target=/root/.cache/go-build \
             --mount=type=cache,target=/go/pkg \
             make build-cli
