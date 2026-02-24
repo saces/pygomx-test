@@ -1,29 +1,25 @@
 # set some defaults
 
 # one of static, shared
-ifndef BUILD_MODE
-  BUILD_MODE = static
-endif
+BUILD_MODE ?= static
 
 # one of none, colm, goolm, vodozemac
-ifndef OLM_FLAVOUR
-  OLM_FLAVOUR = colm
-endif
+OLM_FLAVOUR ?= colm
 
 ifndef GO_TAGS
   GO_TAGS =
 else
-  GO_TAGS += ,
+  GO_TAGS := $(GO_TAGS),
 endif
 
 ifeq ($(OLM_FLAVOUR),none)
-    GO_TAGS += nocrypto
+    GO_TAGS := $(GO_TAGS)nocrypto
 else ifeq ($(OLM_FLAVOUR),colm)
-    GO_TAGS += colm
+    GO_TAGS := $(GO_TAGS)colm
 else ifeq ($(OLM_FLAVOUR),goolm)
-    GO_TAGS += goolm
+    GO_TAGS := $(GO_TAGS)goolm
 else ifeq ($(OLM_FLAVOUR),vodozemac)
-    GO_TAGS += vodozemac
+    GO_TAGS := $(GO_TAGS)vodozemac
 else
   $(error unknown OLM_FLAVOUR $(OLM_FLAVOUR))
 endif
@@ -70,11 +66,11 @@ libmxclient.h: ../libmxclient/go.mod ../libmxclient/go.sum $(SOURCE_GO)
 
 .PHONY:
 clean:
-	-rm _pygomx.*
-	-rm libmxclient.*
-	-rm -r dist/
-	-rm -r build/
-	-rm -r pygomx_module.egg-info
+	@rm -f _pygomx.*
+	@rm -f libmxclient.*
+	@rm -rf dist/
+	@rm -rf build/
+	@rm -rf pygomx_module.egg-info
 
 .PHONY:
 install: all
