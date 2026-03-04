@@ -3,16 +3,13 @@ pygomx-module
 
 python package with the pygomx binaries
 
-install reqiurements:
+install:
 
-    pip install -e requirements.txt
+    pip install [-e] .
 
 
 build wheel:
 
-    make
-    python setup.py bdist_wheel
+    python3 -m build --wheel
 
-install:
-
-    python setup.py install
+see ../README.txt for more
