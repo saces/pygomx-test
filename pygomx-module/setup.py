@@ -47,11 +47,11 @@ class CustomCommand(Command):
         go_call = [
             "go",
             "build",
-            f"-buildmode=${build_mode_name}",
+            f"-buildmode={build_mode_name}",
             "-tags",
             ",".join(go_tags),
             "-o",
-            f"../pygomx-module/libmxclient${build_mode_ext}",
+            f"../pygomx-module/libmxclient{build_mode_ext}",
             ".",
         ]
         subprocess.call(go_call, cwd="../libmxclient")

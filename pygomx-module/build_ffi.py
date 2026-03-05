@@ -10,7 +10,7 @@ lib_list = [
 # keep defaults in sync with setup.py
 if (
     os.getenv("PYGOMX_BUILD_MODE", "static") == "static"
-    and os.getenv("PYGOMX_OLM_FLAVOR", colm) == "colm"
+    and os.getenv("PYGOMX_OLM_FLAVOR", "colm") == "colm"
 ):
     lib_list += ["olm"]
 
