@@ -16,6 +16,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "cffi>=2.0.0",
     "click",
 ]
 
@@ -27,9 +28,6 @@ dependencies = [
 
 [project.urls]
 repository = "https://codeberg.org/saces/pygomx"
-
-[tool.distutils.egg_info]
-egg_base = "/tmp"
 
 [project.scripts]
 mxdiscover = "pymxutils.mxutils:discoverhs"
