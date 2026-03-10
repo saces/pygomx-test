@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-import logging
-from _pygomx import lib, ffi
 import json
+import logging
+
+from _pygomx import ffi, lib
+
 from .errors import APIError
 
 logger = logging.getLogger(__name__)
