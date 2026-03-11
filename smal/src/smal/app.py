@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-
+# Copyright (C) 2026 saces@c-base.org
+# SPDX-License-Identifier: AGPL-3.0-only
 import logging
 import asyncio
 
