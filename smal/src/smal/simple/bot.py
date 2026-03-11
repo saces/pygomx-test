@@ -17,16 +17,22 @@ class SMALBot(SMALApp):
         super().__init__()
         self._sigil = sigil
 
-    async def sendmessage(self, roomid, text):
+    def run(self):
+        self._sync()
+
+    def stop(self):
+        self._stopsync()
+
+    def sendmessage(self, roomid, text):
         data = {}
         data["roomid"] = roomid
         data["content"] = {}
         data["content"]["body"] = text
         data["content"]["msgtype"] = "m.text"
 
-        await self._sendmessage(data)
+        self._sendmessage(data)
 
-    async def sendmessagereply(self, roomid, msgid, mxid, text):
+    def sendmessagereply(self, roomid, msgid, mxid, text):
         data = {}
         data["roomid"] = roomid
         data["content"] = {}
@@ -40,13 +46,13 @@ class SMALBot(SMALApp):
         data["content"]["m.relates_to"]["m.in_reply_to"] = {}
         data["content"]["m.relates_to"]["m.in_reply_to"]["event_id"] = msgid
 
-        await self._sendmessage(data)
+        self._sendmessage(data)
 
-    async def sendnotice(self, roomid, text):
+    def sendnotice(self, roomid, text):
         data = {}
         data["roomid"] = roomid
         data["content"] = {}
         data["content"]["body"] = text
         data["content"]["msgtype"] = "m.notice"
 
-        await self._sendmessage(data)
+        self._sendmessage(data)

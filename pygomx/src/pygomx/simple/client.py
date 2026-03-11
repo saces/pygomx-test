@@ -1,31 +1,17 @@
 # -*- coding: utf-8 -*-
-import logging
-from _pygomx import lib, ffi
 import json
-from .errors import APIError
+import logging
+
+from _pygomx import ffi, lib
+
+from .errors import APIError, CheckApiError
 
 logger = logging.getLogger(__name__)
 
 
-def checkApiError(cstr):
-    result = ffi.string(cstr).decode("utf-8")
-    lib.FreeCString(cstr)
-
-    if result.startswith("ERR:"):
-        raise APIError(result)
-
-    if result == "SUCCESS.":
-        return
-
-    logger.debug(result)
-
-    result_dict = json.loads(result)
-    return result_dict
-
-
-class _MXClient:
+class _SimpleClient:
     """
-    core binding
+    synchronous core binding
     """
 
     def __init__(self):
@@ -73,30 +59,30 @@ class _MXClient:
 
     def _sync(self):
         r = lib.apiv0_startclient(self.client_id)
-        checkApiError(r)
+        CheckApiError(r)
 
     def _stopsync(self):
         r = lib.apiv0_stopclient(self.client_id)
-        checkApiError(r)
+        CheckApiError(r)
 
     def _sendmessage(self, data_dict):
         data = json.dumps(data_dict).encode(encoding="utf-8")
         r = lib.apiv0_sendmessage(self.client_id, data)
-        result = checkApiError(r)
+        result = CheckApiError(r)
         return result
 
     def leaveroom(self, roomid):
         r = lib.apiv0_leaveroom(self.client_id, roomid.encode(encoding="utf-8"))
-        checkApiError(r)
+        CheckApiError(r)
 
     def joinedrooms(self):
         r = lib.apiv0_joinedrooms(self.client_id)
-        return checkApiError(r)
+        return CheckApiError(r)
 
     def _createroom(self, data_dict):
         data = json.dumps(data_dict).encode(encoding="utf-8")
         r = lib.apiv0_createroom(self.client_id, data)
-        return checkApiError(r)
+        return CheckApiError(r)
 
     def process_event(self, evt):
         if hasattr(self, "on_event") and callable(self.on_event):
