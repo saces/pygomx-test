@@ -87,6 +87,51 @@ services:
       dind:
         condition: service_healthy
 
+  manylinux:
+    build:
+      context: .
+      pull: true
+      dockerfile_inline: |
+        # syntax=docker/dockerfile:1
+        FROM quay.io/pypa/manylinux_2_28_x86_64:latest
+        RUN dnf -y install golang
+        ENV PIP_ROOT_USER_ACTION=ignore
+        RUN <<EOF
+        set -eux
+        for INTERPRETER in cpython3.10; do
+          $${INTERPRETER} -m pip install --upgrade pip
+          $${INTERPRETER} -m pip install --upgrade setuptools wheel auditwheel cffi
+        done
+        for dir in pygomx-work .cache go; do
+          mkdir /$${dir}
+          chmod 777 /$${dir}
+        done
+        EOF
+    volumes:
+      - .:/pygomx-src:ro
+      - type: bind
+        source: ./dist
+        target: /pygomx-dist
+        bind:
+          create_host_path: false
+    user: 1000:1000
+    working_dir: /pygomx-work
+    command:
+        - /bin/bash
+        - -c
+        - |
+          set -euo pipefail
+          # git clone /pygomx-src .
+          cp -r /pygomx-src/* .
+          cd pygomx
+          export PYGOMX_BUILD_MODE=static
+          export PYGOMX_OLM_FLAVOR=goolm
+
+          for INTERPRETER in cpython3.10; do
+            $${INTERPRETER} -m build --wheel --outdir /pygomx-dist/$${INTERPRETER}
+            $${INTERPRETER} -m auditwheel repair --wheel-dir /pygomx-dist/out /pygomx-dist/$${INTERPRETER}/*.whl
+          done
+
 volumes:
   demobot_data:
   dind-run:
