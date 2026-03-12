@@ -12,7 +12,7 @@ def mktoken():
     mxid = sys.argv[1].encode(encoding="utf-8")
     pw = sys.argv[2].encode(encoding="utf-8")
 
-    r = lib.cli_mkmxtoken(mxid, pw)
+    r = lib.cliv0_mkmxtoken(mxid, pw)
     result = ffi.string(r)
     lib.FreeCString(r)
     print(result)

@@ -12,7 +12,7 @@ def whoami():
     url = sys.argv[1].encode(encoding="utf-8")
     tk = sys.argv[2].encode(encoding="utf-8")
 
-    r = lib.cli_whoami(url, tk)
+    r = lib.cliv0_whoami(url, tk)
     result = ffi.string(r)
     lib.FreeCString(r)
     print(result)

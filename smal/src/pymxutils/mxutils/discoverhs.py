@@ -15,7 +15,7 @@ def discoverhs(domain, show_json):
     """Attempts to discover the homeserver from the given string"""
     mxid = domain.encode(encoding="utf-8")
 
-    r = lib.cli_discoverhs(mxid)
+    r = lib.cliv0_discoverhs(mxid)
     result = ffi.string(r).decode("utf-8")
     lib.FreeCString(r)
     if result.startswith("ERR:"):

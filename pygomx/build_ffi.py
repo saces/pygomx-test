@@ -35,12 +35,12 @@ ffibuilder.cdef(
     typedef void (*on_message_handler_ptr) (char*, void*);
     typedef void (*on_sys_handler_ptr) (char*, void*);
     extern void  FreeCString(char* s);
-    extern char* cli_discoverhs(char* mxid);
-    extern char* cli_mkmxtoken(char* mxid, char* pw);
-    extern char* cli_whoami(char* hs, char* accessToken);
-    extern char* cli_accountinfo(char* hs, char* accessToken);
-    extern char* cli_clearaccount(char* hs, char* accessToken);
-    extern char* cli_serverinfo(char* url);
+    extern char* cliv0_discoverhs(char* mxid);
+    extern char* cliv0_mkmxtoken(char* mxid, char* pw);
+    extern char* cliv0_whoami(char* hs, char* accessToken);
+    extern char* cliv0_accountinfo(char* hs, char* accessToken);
+    extern char* cliv0_clearaccount(char* hs, char* accessToken);
+    extern char* cliv0_serverinfo(char* url);
     extern int   apiv0_initialize();
     extern int   apiv0_deinitialize();
     extern char* apiv0_discover(char* mxid);

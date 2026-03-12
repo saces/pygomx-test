@@ -11,7 +11,7 @@ def serverinfo():
 
     mxdomain = sys.argv[1].encode(encoding="utf-8")
 
-    r = lib.cli_serverinfo(mxdomain)
-    result = ffi.string(r)
+    r = lib.cliv0_serverinfo(mxdomain)
+    result = ffi.string(r).decode("utf-8")
     lib.FreeCString(r)
     print(result)
