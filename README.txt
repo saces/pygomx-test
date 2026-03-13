@@ -58,7 +58,8 @@ usage:
 
   commands:
     mxdiscover --help
-    mxwhoami
+    mxpassitem --help
+    mxwhoami --help
     mxtoken
     mxaccountinfo
     mxclearaccount

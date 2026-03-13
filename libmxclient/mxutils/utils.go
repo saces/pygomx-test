@@ -89,8 +89,12 @@ func MkToken(ids string, pw string) string {
 	return resp.AccessToken
 }
 
-func Whoami(hs string, accessToken string) string {
-	return "nope. whoami"
+func Whoami(hs string, accessToken string) (*mautrix.RespWhoami, error) {
+	mauclient, err := mautrix.NewClient(hs, "", accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return mauclient.Whoami(context.Background())
 }
 
 func AccountInfo(hs string, accessToken string) string {

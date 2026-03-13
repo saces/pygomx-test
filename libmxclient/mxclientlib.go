@@ -143,8 +143,16 @@ func cliv0_mkmxtoken(id *C.char, pw *C.char) *C.char {
 func cliv0_whoami(hs *C.char, tk *C.char) *C.char {
 	_hs := C.GoString(hs)
 	_tk := C.GoString(tk)
-	result := mxutils.Whoami(_hs, _tk)
-	return C.CString(result)
+	resp, err := mxutils.Whoami(_hs, _tk)
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	out, err := json.Marshal(resp)
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	s := string(out)
+	return C.CString(s)
 }
 
 //export cliv0_accountinfo
