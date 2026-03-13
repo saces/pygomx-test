@@ -41,6 +41,7 @@ ffibuilder.cdef(
     extern char* cliv0_accountinfo(char* hs, char* accessToken);
     extern char* cliv0_clearaccount(char* hs, char* accessToken);
     extern char* cliv0_serverinfo(char* url);
+    extern char* cliv0_mxpassitem(char* mxpassfile, char* hs, char* localpart, char* domain);
     extern int   apiv0_initialize();
     extern int   apiv0_deinitialize();
     extern char* apiv0_discover(char* mxid);

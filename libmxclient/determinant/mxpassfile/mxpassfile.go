@@ -87,28 +87,20 @@ func parseLine(line string) *Entry {
 	}
 }
 
-func isWild(s string) bool {
-	if s == "" || s == "*" {
+func superCMP(fileitem, filteritem string) bool {
+	if filteritem == "*" {
 		return true
 	}
-	return false
-}
-
-func superCMP(s1, s2 string) bool {
-	if isWild(s1) || isWild(s2) {
-		return true
-	}
-	//fmt.Printf("sCMP: '%s' '%s'\n", s1, s2)
-	return s1 == s2
+	return fileitem == filteritem
 }
 
 // FindPassword finds the password for the provided synapsehost, localpart, and domain. An empty
 // string will be returned if no match is found.
 func (pf *Passfile) FindPassword(matrixhost, localpart, domain string) string {
 	for _, e := range pf.Entries {
-		if (e.Matrixhost == "*" || e.Matrixhost == matrixhost) &&
-			(e.Localpart == "*" || e.Localpart == localpart) &&
-			(e.Domain == "*" || e.Domain == domain) {
+		if superCMP(e.Matrixhost, matrixhost) &&
+			superCMP(e.Localpart, localpart) &&
+			superCMP(e.Domain, domain) {
 			return e.Token
 		}
 	}

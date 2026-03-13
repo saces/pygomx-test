@@ -170,6 +170,20 @@ func cliv0_serverinfo(url *C.char) *C.char {
 	return C.CString(result)
 }
 
+//export cliv0_mxpassitem
+func cliv0_mxpassitem(mxpassfile_path *C.char, url *C.char, localpart *C.char, domain *C.char) *C.char {
+	item, err := mxutils.GetMXPassItem(C.GoString(mxpassfile_path), C.GoString(url), C.GoString(localpart), C.GoString(domain))
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	out, err := json.Marshal(item)
+	if err != nil {
+		return C.CString(fmt.Sprintf("ERR: %v", err))
+	}
+	s := string(out)
+	return C.CString(s)
+}
+
 /*
 high level api, supports multiple clients
 the same handler can be attached to multiple clients
