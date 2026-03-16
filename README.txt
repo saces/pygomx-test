@@ -60,6 +60,7 @@ usage:
     mxdiscover --help
     mxpassitem --help
     mxwhoami --help
+    mxlogout --help
     mxtoken
     mxaccountinfo
     mxclearaccount
