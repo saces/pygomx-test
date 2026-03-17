@@ -2,11 +2,15 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 import click
 from pygomx import CliV0
+import pygomx
+
+from .click import click_catch_exception
 
 
 @click.command()
 @click.option("-u", "--url", "hs_url", metavar="url", help="homeserver url")
 @click.option("-t", "--token", "token", metavar="token", help="access token")
+@click_catch_exception(handle=(pygomx.errors.APIError))
 def whoami(hs_url, token):
     """this token belongs to?"""
 
@@ -15,4 +19,4 @@ def whoami(hs_url, token):
     else:
         cli = CliV0(hs_url, token)
 
-    print(cli.Whoami())
+    click.echo(cli.Whoami())
