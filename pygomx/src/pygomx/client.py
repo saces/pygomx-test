@@ -61,9 +61,16 @@ class _AsyncClient:
         self.UserID = result_dict["userid"]
         self.DeviceID = result_dict["deviceid"]
 
-    async def _sync(self):
+    async def _sync_inner(self):
         r = ApiV0Api.startclient(self.client_id)
         CheckApiError(r)
+
+    async def _sync(self):
+        loop = asyncio.new_event_loop()
+        threading.Thread(
+            target=loop.run_forever, name="Async Runner", daemon=True
+        ).start()
+        asyncio.run_coroutine_threadsafe(self._sync_inner(), loop).result()
 
     def _stopsync(self):
         r = ApiV0Api.stopclient(self.client_id)
