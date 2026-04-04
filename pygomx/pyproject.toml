@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pygomx"
 dynamic = ["version"]
 requires-python = ">=3.10"
-description = "python pindings for a golang matrix library"
+description = "python bindings for a golang matrix library"
 license = "AGPL-3.0-only"
 readme = "README.txt"
 
