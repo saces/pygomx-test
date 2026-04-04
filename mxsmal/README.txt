@@ -4,7 +4,7 @@ Simple Matrix Application Library
 
 sub libs:
  - pymxutils: matrix cli utils
- - smal: the lib itself
+ - mxsmal: the lib itself
  - smbl: simplematrixbotlib compat layer experiments (if any)
  - demobot: simple demo bot
 

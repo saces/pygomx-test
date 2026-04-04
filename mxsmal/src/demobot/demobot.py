@@ -1,7 +1,7 @@
 # Copyright (C) 2026 saces@c-base.org
 # SPDX-License-Identifier: AGPL-3.0-only
 import logging
-from smal.simple.bot import SMALBot
+from mxsmal.bot import SMALBot
 
 # setup logging, we want timestamps
 logging.basicConfig(
@@ -16,15 +16,15 @@ logger.setLevel(level=logging.INFO)
 DEFAULT_PREFIX = "!"
 
 
-class SimpleDemoBot(SMALBot):
+class DemoBot(SMALBot):
 
-    def on_sys(self, ntf):
+    async def on_sys(self, ntf):
         print("Got a system notification: ", ntf)
 
-    def on_event(self, evt):
+    async def on_event(self, evt):
         print("Got an event: ", evt)
 
-    def on_message(self, msg):
+    async def on_message(self, msg):
 
         if msg["type"] != "m.room.message":
             # not a room message
@@ -48,7 +48,7 @@ class SimpleDemoBot(SMALBot):
 
         if msg["content"]["body"] == "!leave":
             logger.info(f"leaving room {msg['roomid']}")
-            self.leaveroom(msg["roomid"])
+            await self.leaveroom(msg["roomid"])
             return
 
         if msg["content"]["body"].startswith("!echo"):
@@ -59,32 +59,30 @@ class SimpleDemoBot(SMALBot):
                 txt = "Empty text? Are you kidding me?"
 
             if msg["is_direct"]:
-                self.sendmessage(msg["roomid"], txt)
+                await self.sendmessage(msg["roomid"], txt)
             else:
-                self.sendmessagereply(msg["roomid"], msg["id"], msg["sender"], txt)
+                await self.sendmessagereply(
+                    msg["roomid"], msg["id"], msg["sender"], txt
+                )
             return
 
         logger.info(f"ignored a message: {msg}")
 
-    def listjoinedrooms(self):
-        roomlist = self.joinedrooms()
+    async def on_startup_run(self):
+        roomlist = await self.joinedrooms()
         for room in roomlist:
             if room["is_direct"]:
                 txt = "Hey, I'm back for secret talk :)"
             else:
                 txt = "I'm back online."
-            self.sendnotice(room["roomid"], txt)
+            await self.sendnotice(room["roomid"], txt)
 
 
 def main():
     # create and initialize the bot
-    bot = SimpleDemoBot(DEFAULT_PREFIX)
+    bot = DemoBot(DEFAULT_PREFIX)
 
-    # the bot's matrix client is ready to use now
-    # request the list of joined rooms
-    bot.listjoinedrooms()
-
-    # start syncing forever (listen for incommmig messages/events)
+    # start the asyncio event loop and sync forever (listen for incommmig messages/events)
     bot.run()
 
 

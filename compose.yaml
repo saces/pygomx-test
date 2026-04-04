@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Containerfile.debian
       target: develop
-    working_dir: /smal
+    working_dir: /mxsmal
     volumes:
-      - ./smal:/smal:ro
+      - ./mxsmal:/mxsmal:ro
       - ./work:/work
 
   demobot:

@@ -24,7 +24,7 @@ dependencies = [
 
 [tool.setuptools.package-dir]
 "pymxutils" = "src/pymxutils"
-"mxsmal" = "src/smal"
+"mxsmal" = "src/mxsmal"
 "smbl" = "src/smbl"
 "demobot" = "src/demobot"
 
@@ -40,6 +40,6 @@ mxlogout = "pymxutils.mxutils:logout"
 mxclearaccount = "pymxutils.mxutils:clearaccount"
 mxserverinfo = "pymxutils.mxutils:serverinfo"
 mxpassitem = "pymxutils.mxutils:passitem"
-smalsetup = "smal.smalsetup:smalsetup"
+smalsetup = "mxsmal.smalsetup:smalsetup"
 demobot = "demobot:main"
 simplebot = "demobot.simple:main"
