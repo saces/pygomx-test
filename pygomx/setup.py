@@ -43,10 +43,16 @@ class CustomCommand(Command):
         match os.getenv("PYGOMX_BUILD_MODE", "static"):
             case "static":
                 build_mode_name = "c-archive"
-                build_mode_ext = ".a"
+                if os.name == "nt":
+                    build_mode_ext = ".lib"
+                else:
+                    build_mode_ext = ".a"
             case "shared":
                 build_mode_name = "c-shared"
-                build_mode_ext = ".so"
+                if os.name == "nt":
+                    build_mode_ext = ".dll"
+                else:
+                    build_mode_ext = ".so"
             case _:
                 raise ValueError("Invalid PYGOMX_BUILD_MODE.")
 
@@ -73,7 +79,11 @@ class CustomCommand(Command):
             f"../pygomx/libmxclient{build_mode_ext}",
             ".",
         ]
+        print(f"DEBUG: {' '.join(go_call) }")
         ret = subprocess.call(go_call, cwd="../libmxclient")
+        subprocess.call(["ls", "-la"])
+        subprocess.call(["pwd"])
+
         if ret != 0:
             raise Exception("Go build failed.")
 
