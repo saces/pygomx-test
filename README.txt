@@ -31,11 +31,11 @@ install from source / develop (venv):
   PYGOMX_BUILD_MODE=static
 
   # one of none, colm, goolm, vodozemac
-  PYGOMX_OLM_FLAVOR=colm
+  PYGOMX_OLM_FLAVOR=goolm
   # for colm you need libolm-dev installed
   # vodozemac is not supported yet
 
-  you need go >=1.22 installed
+  you need go >=1.25 installed
 
   (create and activate a venv)
 
