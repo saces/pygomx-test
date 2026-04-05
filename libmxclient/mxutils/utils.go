@@ -97,8 +97,12 @@ func Whoami(hs string, accessToken string) (*mautrix.RespWhoami, error) {
 	return mauclient.Whoami(context.Background())
 }
 
-func AccountInfo(hs string, accessToken string) string {
-	return "nope. accountinfo"
+func AccountInfo(hs string, accessToken string) (*mautrix.RespDevicesInfo, error) {
+	mauclient, err := mautrix.NewClient(hs, "", accessToken)
+	if err != nil {
+		return nil, err
+	}
+	return mauclient.GetDevicesInfo(context.Background())
 }
 
 func ClearAccount(hs string, accessToken string) string {
