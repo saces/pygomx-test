@@ -81,6 +81,14 @@ class CustomCommand(Command):
         ]
         print(f"DEBUG: {' '.join(go_call) }")
         ret = subprocess.call(go_call, cwd="../libmxclient")
+        if ret != 0:
+            raise Exception("Go build failed.")
+
+        if os.name == "nt" and os.getenv("PYGOMX_BUILD_MODE", "nope") == "shared":
+            ret = subprocess.call(["dumpbin.exe", "/EXPORTS", "libmxclient.dll"])
+            if ret != 0:
+                raise Exception("Linklib generation failed.")
+
         subprocess.call(["ls", "-la"])
         subprocess.call(["pwd"])
 
