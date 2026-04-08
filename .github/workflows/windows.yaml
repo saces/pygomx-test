@@ -33,3 +33,4 @@ jobs:
         env:
           CIBW_SKIP: "*-win32 *t-*"
           PYGOMX_BUILD_MODE: shared
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair --add-path ${GITHUB_WORKSPACE}\\pygomx -w {dest_dir} {wheel}"
