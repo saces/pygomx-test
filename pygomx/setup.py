@@ -84,9 +84,20 @@ class CustomCommand(Command):
 
         if os.name == "nt" and os.getenv("PYGOMX_BUILD_MODE", "nope") == "shared":
             from setuptools._distutils.compilers.C.msvc import Compiler
+
             comp = Compiler()
             comp.initialize()
-            subprocess.check_call([comp.lib, "/def:libmxclient.def", "/machine:AMD64", "/out:libmxclient.lib"]) 
+            subprocess.check_call(
+                [
+                    comp.lib,
+                    "/def:libmxclient.def",
+                    "/machine:AMD64",
+                    "/out:libmxclient.lib",
+                ]
+            )
+
+        subprocess.call(["ls", "-la"])
+        subprocess.call(["pwd"])
 
 
 class CustomBuild(build):
