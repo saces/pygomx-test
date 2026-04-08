@@ -80,20 +80,13 @@ class CustomCommand(Command):
             ".",
         ]
         print(f"DEBUG: {' '.join(go_call) }")
-        ret = subprocess.call(go_call, cwd="../libmxclient")
-        if ret != 0:
-            raise Exception("Go build failed.")
+        subprocess.check_call(go_call, cwd="../libmxclient")
 
         if os.name == "nt" and os.getenv("PYGOMX_BUILD_MODE", "nope") == "shared":
-            ret = subprocess.call(["dumpbin.exe", "/EXPORTS", "libmxclient.dll"])
-            if ret != 0:
-                raise Exception("Linklib generation failed.")
-
-        subprocess.call(["ls", "-la"])
-        subprocess.call(["pwd"])
-
-        if ret != 0:
-            raise Exception("Go build failed.")
+            from setuptools._distutils.compilers.C.msvc import Compiler
+            comp = Compiler()
+            comp.initialize()
+            subprocess.check_call([comp.lib, "/def:libmxclient.def", "/machine:AMD64", "/out:libmxclient.lib"]) 
 
 
 class CustomBuild(build):
